@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>CTG do Pila</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/tab.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'guaiaca')">Guaiaca</button>
+      <button class="tablinks" onclick="openTab(event, 'patronagem')">Patronagem</button>
+      <button class="tablinks" onclick="openTab(event, 'acoes')">A&ccedil;&otilde;es</button>
+    </div>
+
+    <div class="container">
+      <!-- <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-push-2">
+          <h1 class="text-center">Pila - A Primeira Criptomoeda Gaúcha!</h1>
+          <hr/>
+          <br/>
+        </div>
+      </div> -->
+
+      <div id="guaiaca" class="row tabcontent">
+        <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Guaiaca</h3>
+            </div>
+            <div class="panel-body">
+              <h4>Saldo</h4>
+              <strong>Saldo</strong>: <span id="TTBalance"></span> PILA<br/><br/>
+              <h4>Transferir</h4>
+              <input type="text" class="form-control" id="TTTransferAddress" placeholder="Conta de Destino" />
+              <input type="text" class="form-control" id="TTTransferAmount" placeholder="Quantidade" />
+              <button class="btn btn-primary" id="transferButton" type="button">Transferir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="patronagem" class="row tabcontent">
+        <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Patronagem</h3>
+            </div>
+            <div class="whitelist panel-body">
+              <h4>Autorizar Entidade</h4>
+              <input type="text" class="form-control" id="whitelistAddress"/>
+              <input class="btn btn-primary" type="button" id="addToWhitelist" value="Autorizar Conta"/>
+            </div>
+            <div class="whitelist panel-body">
+              <h4>Ações Cadastradas (<a href="JavaScript:App.populateActions();">Atualizar lista</a>)</h4>
+              <img src="https://www.vividresourcing.com/img/ajax-loader.png" id="loading" height="50" style="visibility:hidden;"/>
+              <div id="actions">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="acoes" class="row tabcontent">
+        <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">A&ccedil;&otilde;es</h3>
+            </div>
+            <div class="actions panel-body">
+              <h4>Criar Ação</h4>
+              <input type="text" class="form-control" id="actionPeople" placeholder="Pessoas impactadas" />
+              <input type="text" class="form-control" id="actionUrl" placeholder="URL da Ação" />
+              <input type="button" class="btn btn-primary" id="addAction" value="Acrescentar Ação" />
+            </div>
+            <div class="volunteers panel-body">
+              <h4>Adicionar Voluntário</h4>
+              <input type="text" class="form-control" id="actionId" placeholder="Número da Ação" />
+              <input type="text" class="form-control" id="volunteer" placeholder="Conta do Voluntário" />
+              <input type="text" class="form-control" id="contribution" placeholder="Contribuição na Ação" />
+              <input type="button" class="btn btn-primary" id="addVolunteer" value="Adicionar Voluntário" />
+            </div>
+            <div class="finish panel-body">
+              <h4>Encerrar Ação</h4>
+              <input type="text" class="form-control" id="actionIdToFinish" placeholder="Número da Ação" />
+              <input type="button" class="btn btn-primary" id="finishAction" value="Finalizar Ação" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/tab.js"></script>
+  </body>
+</html>
