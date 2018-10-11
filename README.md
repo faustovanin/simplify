@@ -19,9 +19,8 @@ O pila se junta com suor do trabalho honesto. O pila é parte das tradições de
 
 Para replicar o repositório execute:
 
-`git clone https://github.com/faustovanin/pila
-cd pila
-`
+`git clone https://github.com/faustovanin/pila`
+`cd pila`
 
 Em seguinda instale os pacotes necessários:
 
