@@ -1,5 +1,5 @@
-const Pila = artifacts.require("./Pila.sol");
+const Simplify = artifacts.require("./Simplify.sol");
 
 module.exports = function(deployer, network, accounts) {
-  deployer.deploy(Pila, 'Pila', 'PILA', 10, 1000);
+  deployer.deploy(Simplify, 'Simplify', 'SY', 10);
 };
