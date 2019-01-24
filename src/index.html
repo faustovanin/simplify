@@ -23,7 +23,7 @@
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'wallet')">Wallet</button>
       <button class="tablinks" onclick="openTab(event, 'admin')">Emitir</button>
-      <!-- <button class="tablinks" onclick="openTab(event, 'action')">A&ccedil;&otilde;es</button> -->
+      <button class="tablinks" onclick="openTab(event, 'action')">A&ccedil;&otilde;es</button>
     </div>
 
     <div class="container">
@@ -47,7 +47,7 @@
               <h4>Transferir</h4>
               <input type="text" class="form-control" id="TTTransferAddress" placeholder="Conta de Destino" />
               <input type="text" class="form-control" id="TTTransferAmount" placeholder="Quantidade" />
-              <input type="text" class="form-control" id="TTTransferComment" placeholder="Comentário" />
+              <!-- <input type="text" class="form-control" id="TTTransferComment" placeholder="Comentário" /> -->
               <button class="btn btn-primary" id="transferButton" type="button">Reconhecer</button>
             </div>
           </div>
@@ -70,33 +70,21 @@
         </div>
       </div>
 
-      <!-- <div id="action" class="row tabcontent">
+      <div id="action" class="row tabcontent">
         <div class="col-sm-6 col-sm-push-3 col-md-4 col-md-push-4">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h3 class="panel-title">A&ccedil;&otilde;es</h3>
             </div>
             <div class="actions panel-body">
-              <h4>Criar Ação</h4>
-              <input type="text" class="form-control" id="actionPeople" placeholder="Pessoas impactadas" />
-              <input type="text" class="form-control" id="actionUrl" placeholder="URL da Ação" />
-              <input type="button" class="btn btn-primary" id="addAction" value="Acrescentar Ação" />
-            </div>
-            <div class="volunteers panel-body">
-              <h4>Adicionar Voluntário</h4>
-              <input type="text" class="form-control" id="actionId" placeholder="Número da Ação" />
-              <input type="text" class="form-control" id="volunteer" placeholder="Conta do Voluntário" />
-              <input type="text" class="form-control" id="contribution" placeholder="Contribuição na Ação" />
-              <input type="button" class="btn btn-primary" id="addVolunteer" value="Adicionar Voluntário" />
-            </div>
-            <div class="finish panel-body">
-              <h4>Encerrar Ação</h4>
-              <input type="text" class="form-control" id="actionIdToFinish" placeholder="Número da Ação" />
-              <input type="button" class="btn btn-primary" id="finishAction" value="Finalizar Ação" />
+              <h4>Criar Nova Conta</h4>
+              <input type="button" class="btn btn-primary" id="createAccount" value="Criar" />
+              <input type="text" class="form-control" id="privateKey" placeholder="Chave Privada" />
+              <input type="text" class="form-control" id="account" placeholder="Conta" />
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
 
 
     </div>

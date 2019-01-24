@@ -21,34 +21,16 @@ App = {
   },
 
   initContract: function() {
-    $.getJSON('Pila.json', function(data) {
+    $.getJSON('js/Simplify.json', function(data) {
       // Get the necessary contract artifact file and instantiate it with truffle-contract.
-      var PilaArtifact = data;
-      App.contracts.Pila = TruffleContract(PilaArtifact);
+      var SimplifyArtifact = data;
+      App.contracts.Simplify = TruffleContract(SimplifyArtifact);
 
       // Set the provider for our contract.
-      App.contracts.Pila.setProvider(App.web3Provider);
+      App.contracts.Simplify.setProvider(App.web3Provider);
 
-      // Use our contract to retieve and mark the adopted pets.
-      // web3.eth.getAccounts(function(error, accounts) {
-      //   if (error) {
-      //     console.log(error);
-      //   }
 
-      //   var account = accounts[0];
-
-      //   App.contracts.Pila.deployed().then(function(instance) {
-      //     pilaTokenInstance = instance;
-      //     pilaTokenInstance.ActionStarted().watch(function(error, event) {
-      //       if(!error) {
-      //         App.populateActions();
-      //         console.log(event);
-      //       }
-      //     })
-      //   });
-      // });
-
-      App.populateActions();
+      // App.populateActions();
       return App.getBalances();
     });
 
@@ -61,17 +43,14 @@ App = {
     $(document).on('click', '#addAction', App.createAction);
     $(document).on('click', '#addVolunteer', App.addVolunteer);
     $(document).on('click', '#finishAction', App.finishAction);
+    $(document).on('click', '#mint', App.mint);
+    $(document).on('click', '#createAccount', App.createAccount);
   },
 
   handleTransfer: function(event) {
     event.preventDefault();
 
-    var amount = parseInt($('#TTTransferAmount').val());
-    var toAddress = $('#TTTransferAddress').val();
-
-    console.log('Transfer ' + amount + ' TT to ' + toAddress);
-
-    var pilaTokenInstance;
+    var syTokenInstance;
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
@@ -80,10 +59,15 @@ App = {
 
       var account = accounts[0];
 
-      App.contracts.Pila.deployed().then(function(instance) {
-        pilaTokenInstance = instance;
+      App.contracts.Simplify.deployed().then(async function(instance) {
+        syTokenInstance = instance;
 
-        return pilaTokenInstance.transfer(toAddress, amount, {from: account, gas: 100000});
+        const decimals = await syTokenInstance.decimals.call();
+        var amount = parseInt($('#TTTransferAmount').val()) * Math.pow(10, decimals);
+        var toAddress = $('#TTTransferAddress').val();
+        console.log('Transfer ' + amount + ' TT to ' + toAddress);
+
+        return syTokenInstance.transfer(toAddress, amount, {from: account, gas: 100000});
       }).then(function(result) {
         alert('Transfer Successful!');
         return App.getBalances();
@@ -96,7 +80,7 @@ App = {
   getBalances: function() {
     console.log('Getting balances...');
 
-    var pilaTokenInstance;
+    var syTokenInstance;
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
@@ -105,12 +89,13 @@ App = {
 
       var account = accounts[0];
 
-      App.contracts.Pila.deployed().then(function(instance) {
-        pilaTokenInstance = instance;
+      App.contracts.Simplify.deployed().then(function(instance) {
+        syTokenInstance = instance;
 
-        return pilaTokenInstance.balanceOf(account);
-      }).then(function(result) {
-        balance = result.c[0];
+        return syTokenInstance.balanceOf(account);
+      }).then(async function(result) {
+        const decimals = await syTokenInstance.decimals.call();
+        balance = result.c[0]/Math.pow(10, decimals);
 
         $('#TTBalance').text(balance);
       }).catch(function(err) {
@@ -129,11 +114,11 @@ App = {
 
       var account = accounts[0];
 
-      App.contracts.Pila.deployed().then(function(instance) {
-        pilaTokenInstance = instance;
+      App.contracts.Simplify.deployed().then(function(instance) {
+        syTokenInstance = instance;
         const address = $('#whitelistAddress').val();
 
-        pilaTokenInstance.addAddressToWhitelist(address, {from: account, gas: 100000}).then(function(result){
+        syTokenInstance.addAddressToWhitelist(address, {from: account, gas: 100000}).then(function(result){
           alert('Endereço autorizado');
           console.log(result);
         });
@@ -151,14 +136,14 @@ App = {
 
       var account = accounts[0];
 
-      App.contracts.Pila.deployed().then(function(instance) {
-        pilaTokenInstance = instance;
+      App.contracts.Simplify.deployed().then(function(instance) {
+        syTokenInstance = instance;
         const people = parseInt($('#actionPeople').val());
         const url = $('#actionUrl').val();
 
         console.log(people + " people at " + url);
 
-        pilaTokenInstance.addAction(people, url).then(function(result){
+        syTokenInstance.addAction(people, url).then(function(result){
           alert("Nova ação cadastrada");
           console.log(result);
         });
@@ -178,13 +163,13 @@ App = {
 
       var account = accounts[0];
 
-      App.contracts.Pila.deployed().then(function(instance) {
-        pilaTokenInstance = instance;
+      App.contracts.Simplify.deployed().then(function(instance) {
+        syTokenInstance = instance;
         const actionId = parseInt($('#actionId').val());
         const volunteer = $('#volunteer').val();
         const contribution = parseInt($('#contribution').val());
 
-        pilaTokenInstance.addVolunteer(actionId, volunteer, contribution).then(function(result){
+        syTokenInstance.addVolunteer(actionId, volunteer, contribution).then(function(result){
           alert("Novo voluntário adicionado à ação");
           console.log(result);
         });
@@ -204,12 +189,12 @@ App = {
 
       var account = accounts[0];
 
-      App.contracts.Pila.deployed().then(function(instance) {
-        pilaTokenInstance = instance;
+      App.contracts.Simplify.deployed().then(function(instance) {
+        syTokenInstance = instance;
         const actionId = $('#actionIdToFinish').val();
 
-        pilaTokenInstance.finishAction(actionId).then(function(result){
-          pilaTokenInstance.getActionTokenAmount().then(function(result){
+        syTokenInstance.finishAction(actionId).then(function(result){
+          syTokenInstance.getActionTokenAmount().then(function(result){
             alert("Ação encerrada. O total de tokens emitidos foi de " + result.toString());
             console.log(result);
           });
@@ -226,10 +211,10 @@ App = {
 
       var account = accounts[0];
 
-      App.contracts.Pila.deployed().then(function(instance) {
-        pilaTokenInstance = instance;
+      App.contracts.Simplify.deployed().then(function(instance) {
+        syTokenInstance = instance;
 
-        pilaTokenInstance.owner.then(function(result){
+        syTokenInstance.owner.then(function(result){
           return result.toString() == account;
         });
       });
@@ -244,16 +229,16 @@ App = {
 
       var account = accounts[0];
 
-      App.contracts.Pila.deployed().then(function(instance) {
-        pilaTokenInstance = instance;
+      App.contracts.Simplify.deployed().then(function(instance) {
+        syTokenInstance = instance;
 
 
-        pilaTokenInstance.getActionCount().then(function(result){
+        syTokenInstance.getActionCount().then(function(result){
           const count = result.toString();
           $("#actions").empty();
           $("#loading").show();
           for (var i = 0; i < count; i++) {
-            pilaTokenInstance.getAction(i).then(function(action) {
+            syTokenInstance.getAction(i).then(function(action) {
               console.log(action);
               const creator = action[0].toString();
               const url = web3.toAscii(action[1]);
@@ -272,6 +257,37 @@ App = {
           }
         });
       });
+    });
+  },
+
+  mint: function() {
+    web3.eth.getAccounts(function(error, accounts) {
+      if (error) {
+        console.log(error);
+      }
+
+      var account = accounts[0];
+
+      App.contracts.Simplify.deployed().then(async function(instance) {
+        syTokenInstance = instance;
+
+        const decimals = await syTokenInstance.decimals.call();
+        const address = $('#address').val();
+        const amount  = $('#amount').val() * Math.pow(10, decimals);
+
+        syTokenInstance.mint(address, amount).then(function(result) {
+          alert('Tokens emitidos!');
+          return App.getBalances();
+        });
+      });
+    });
+  },
+
+  createAccount: function() {
+    web3.personal.newAccount(function(account) {
+      console.log(account);
+      $('#account').text(account.address);
+      $('#privateKey').text(account.privateKey);
     });
   }
 
