@@ -45,9 +45,11 @@
           <li><a href="#system">Interagir</a></li>
           <!-- <li><a href="#about">Sobre2</a></li> -->
         </ul>
-        <!-- <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">Link</a></li>
-          <li class="dropdown">
+        <ul class="nav navbar-nav navbar-right">
+          <li id="signUp" data-toggle="modal" data-target="#signUpModal" style="visibility: hidden;"><a style="cursor: pointer;">Cadastro</a></li>
+          <li id="signIn" data-toggle="modal" data-target="#loginModal" style="visibility: hidden;"><a style="cursor: pointer;">Entrar</a></li>
+          <li id="signOut" onclick="logout()" style="visibility: hidden;"><a style="cursor: pointer;">Sair</a></li>
+          <!-- <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="#">Action</a></li>
@@ -56,11 +58,88 @@
               <li role="separator" class="divider"></li>
               <li><a href="#">Separated link</a></li>
             </ul>
-          </li>
-        </ul> -->
+          </li> -->
+        </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+
+  <!-- Auth Modal -->
+  <div class="auth-modal">
+
+    <!-- Modal Cadastro -->
+    <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- onclick="createUser()" -->
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="signUpModalLabel">Cadastro</h4>
+          </div>
+          <form action="javascript:createUser()">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="name">Nome:</label>
+                <input required type="name" class="form-control" id="name">
+              </div>
+              <div class="form-group">
+                <label for="wallet">Carteira:</label>
+                <input required type="wallet" class="form-control" id="wallet">
+              </div>
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input required type="email" class="form-control" id="email">
+              </div>
+              <div class="form-group">
+                <label for="password">Senha:</label>
+                <input required type="password" class="form-control" id="password">
+              </div>
+              <!-- <div class="checkbox">
+                <label><input type="checkbox"> Remember me</label>
+              </div> -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <!-- onclick="login()" -->
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="loginModalLabel">Entrar</h4>
+          </div>
+          <form action="javascript:login()">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input required type="email" class="form-control" id="emailLogin">
+              </div>
+              <div class="form-group">
+                <label for="password">Senha:</label>
+                <input required type="password" class="form-control" id="passwordLogin">
+              </div>
+              <!-- <div class="checkbox">
+                <label><input type="checkbox"> Remember me</label>
+              </div> -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
   <div class="banner">
     <div class="row">
@@ -150,63 +229,66 @@
       <h2>Sistema de Interação Simplify</h2>
     </div>
 
-    <ul class="nav nav-tabs nav-justified" style="text-align: left;">
-      <li class="active"><a href="#first" data-toggle="tab" id="first_tab">Meus SY</a></li>
-      <li><a href="#second" data-toggle="tab" id="second_tab">Emitir</a></li>
-      <li><a href="#third" data-toggle="tab" id="third_tab">Verificar</a></li>
-    </ul>
+    <div id="tabs">
+      <ul class="nav nav-tabs nav-justified" style="text-align: left;">
+        <li class="active"><a href="#first" data-toggle="tab" id="first_tab">Meus SY</a></li>
+        <li><a href="#second" data-toggle="tab" id="second_tab">Emitir</a></li>
+        <li><a href="#third" data-toggle="tab" id="third_tab">Verificar</a></li>
+      </ul>
 
-    <div class="tab-content">
+      <div class="tab-content">
 
-      <div id="first" class="tab-pane fade in active">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Wallet</h3>
+        <div id="first" class="tab-pane fade in active">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Wallet</h3>
+            </div>
+            <div class="panel-body">
+              <h4>Saldo</h4>
+              <strong>Saldo</strong>: <span id="TTBalance"></span> SY<br /><br />
+              <strong>Fluxo</strong>: <span id="TTFlow"></span> SY<br /><br />
+              <h4>Transferir</h4>
+              <input type="text" class="form-control" id="TTTransferAddress" placeholder="Conta de Destino" />
+              <input type="text" class="form-control" id="TTTransferAmount" placeholder="Quantidade" />
+              <!-- <input type="text" class="form-control" id="TTTransferComment" placeholder="Comentário" /> -->
+              <button class="btn btn-primary" id="transferButton" type="button">Reconhecer SY</button>
+            </div>
           </div>
-          <div class="panel-body">
-            <h4>Saldo</h4>
-            <strong>Saldo</strong>: <span id="TTBalance"></span> SY<br /><br />
-            <strong>Fluxo</strong>: <span id="TTFlow"></span> SY<br /><br />
-            <h4>Transferir</h4>
-            <input type="text" class="form-control" id="TTTransferAddress" placeholder="Conta de Destino" />
-            <input type="text" class="form-control" id="TTTransferAmount" placeholder="Quantidade" />
-            <!-- <input type="text" class="form-control" id="TTTransferComment" placeholder="Comentário" /> -->
-            <button class="btn btn-primary" id="transferButton" type="button">Reconhecer SY</button>
+          <!-- <a class="btn btn-primary btn-lg" onclick="$('#second_tab').trigger('click')">Second</a>
+              <a class="btn btn-primary btn-lg" onclick="$('#third_tab').trigger('click')">Third</a> -->
+        </div>
+
+        <div id="second" class="tab-pane fade in">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Emitir</h3>
+            </div>
+            <div class="whitelist panel-body">
+              <h4>Tokens a emitir</h4>
+              <input type="text" class="form-control" id="address" placeholder="Conta de Destino" />
+              <input type="text" class="form-control" id="amount" placeholder="Quantidade" />
+              <input class="btn btn-primary" type="button" id="mint" value="Emitir SY" />
+            </div>
           </div>
         </div>
-        <!-- <a class="btn btn-primary btn-lg" onclick="$('#second_tab').trigger('click')">Second</a>
-            <a class="btn btn-primary btn-lg" onclick="$('#third_tab').trigger('click')">Third</a> -->
-      </div>
 
-      <div id="second" class="tab-pane fade in">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Emitir</h3>
-          </div>
-          <div class="whitelist panel-body">
-            <h4>Tokens a emitir</h4>
-            <input type="text" class="form-control" id="address" placeholder="Conta de Destino" />
-            <input type="text" class="form-control" id="amount" placeholder="Quantidade" />
-            <input class="btn btn-primary" type="button" id="mint" value="Emitir SY" />
-          </div>
-        </div>
-      </div>
-
-      <div id="third" class="tab-pane fade in">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">A&ccedil;&otilde;es</h3>
-          </div>
-          <div class="actions panel-body">
-            <h4>Consultar Conta</h4>
-            <input type="text" class="form-control" id="checkaccount" placeholder="Conta"/>
-            <input type="button" class="btn btn-primary" id="checkAccount" value="Verificar SY" />        
-            <input type="text" class="form-control" id="checkbalance" placeholder="Saldo" readonly/>
-            <input type="text" class="form-control" id="checkflow" placeholder="Fluxo" readonly/>
+        <div id="third" class="tab-pane fade in">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">A&ccedil;&otilde;es</h3>
+            </div>
+            <div class="actions panel-body">
+              <h4>Consultar Conta</h4>
+              <input type="text" class="form-control" id="checkaccount" placeholder="Conta"/>
+              <input type="button" class="btn btn-primary" id="checkAccount" value="Verificar SY" />
+              <input type="text" class="form-control" id="checkbalance" placeholder="Saldo" readonly/>
+              <input type="text" class="form-control" id="checkflow" placeholder="Fluxo" readonly/>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- <div class="container" id="about2">
@@ -235,6 +317,10 @@
   </footer>
 
 
+  <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.7.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.1/firebase-firestore.js"></script> -->
+  <script src="js/firebase.js"></script>
 
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

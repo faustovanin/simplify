@@ -221,6 +221,15 @@ App = {
 
 };
 
+
+$('#loginModal').on('shown.bs.modal', function () {
+  $('#myInput').focus()
+});
+
+$('#signUpModal').on('shown.bs.modal', function () {
+  $('#myInput').focus()
+});
+
 $(function() {
   $(window).load(function() {
     App.init();
