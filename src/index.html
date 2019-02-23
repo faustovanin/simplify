@@ -151,9 +151,9 @@
     </div>
 
     <ul class="nav nav-tabs nav-justified" style="text-align: left;">
-      <li class="active"><a href="#first" data-toggle="tab" id="first_tab">Wallet</a></li>
+      <li class="active"><a href="#first" data-toggle="tab" id="first_tab">Meus SY</a></li>
       <li><a href="#second" data-toggle="tab" id="second_tab">Emitir</a></li>
-      <li><a href="#third" data-toggle="tab" id="third_tab">A&ccedil;&otilde;es</a></li>
+      <li><a href="#third" data-toggle="tab" id="third_tab">Verificar</a></li>
     </ul>
 
     <div class="tab-content">
@@ -166,11 +166,12 @@
           <div class="panel-body">
             <h4>Saldo</h4>
             <strong>Saldo</strong>: <span id="TTBalance"></span> SY<br /><br />
+            <strong>Fluxo</strong>: <span id="TTFlow"></span> SY<br /><br />
             <h4>Transferir</h4>
             <input type="text" class="form-control" id="TTTransferAddress" placeholder="Conta de Destino" />
             <input type="text" class="form-control" id="TTTransferAmount" placeholder="Quantidade" />
             <!-- <input type="text" class="form-control" id="TTTransferComment" placeholder="Comentário" /> -->
-            <button class="btn btn-primary" id="transferButton" type="button">Reconhecer</button>
+            <button class="btn btn-primary" id="transferButton" type="button">Reconhecer SY</button>
           </div>
         </div>
         <!-- <a class="btn btn-primary btn-lg" onclick="$('#second_tab').trigger('click')">Second</a>
@@ -197,10 +198,11 @@
             <h3 class="panel-title">A&ccedil;&otilde;es</h3>
           </div>
           <div class="actions panel-body">
-            <h4>Criar Nova Conta</h4>
-            <input type="button" class="btn btn-primary" id="createAccount" value="Criar" />
-            <input type="text" class="form-control" id="privateKey" placeholder="Chave Privada" />
-            <input type="text" class="form-control" id="account" placeholder="Conta" />
+            <h4>Consultar Conta</h4>
+            <input type="text" class="form-control" id="checkaccount" placeholder="Conta"/>
+            <input type="button" class="btn btn-primary" id="checkAccount" value="Verificar SY" />        
+            <input type="text" class="form-control" id="checkbalance" placeholder="Saldo" readonly/>
+            <input type="text" class="form-control" id="checkflow" placeholder="Fluxo" readonly/>
           </div>
         </div>
       </div>

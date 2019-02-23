@@ -31,7 +31,9 @@ App = {
 
 
       // App.populateActions();
-      return App.getBalances();
+      // App.getBalances();
+      // App.getFlow();
+      App.updateUserData();
     });
 
     return App.bindEvents();
@@ -45,6 +47,7 @@ App = {
     $(document).on('click', '#finishAction', App.finishAction);
     $(document).on('click', '#mint', App.mint);
     $(document).on('click', '#createAccount', App.createAccount);
+    $(document).on('click', '#checkAccount', App.checkAccount);
   },
 
   handleTransfer: function(event) {
@@ -70,137 +73,56 @@ App = {
         return syTokenInstance.transfer(toAddress, amount, {from: account, gas: 100000});
       }).then(function(result) {
         alert('Transfer Successful!');
-        return App.getBalances();
+        // App.getBalances();
+        // App.getFlow();
+        App.updateUserData();
       }).catch(function(err) {
         console.log(err.message);
       });
     });
   },
 
-  getBalances: function() {
+  getBalances: function(account) {
     console.log('Getting balances...');
 
     var syTokenInstance;
+    return new Promise(function(resolve, reject) {
+      web3.eth.getAccounts(function(error, accounts) {
+        if (error) {
+          console.log(error);
+          reject(error);
+        }
 
-    web3.eth.getAccounts(function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
+        if(!account) account = accounts[0];
 
-      var account = accounts[0];
+        App.contracts.Simplify.deployed().then(function(instance) {
+          syTokenInstance = instance;
 
-      App.contracts.Simplify.deployed().then(function(instance) {
-        syTokenInstance = instance;
+          return syTokenInstance.balanceOf(account);
+        }).then(async function(result) {
+          const decimals = await syTokenInstance.decimals.call();
+          let balance = result/Math.pow(10, decimals);
 
-        return syTokenInstance.balanceOf(account);
-      }).then(async function(result) {
-        const decimals = await syTokenInstance.decimals.call();
-        balance = result.c[0]/Math.pow(10, decimals);
-
-        $('#TTBalance').text(balance);
-      }).catch(function(err) {
-        console.log(err.message);
-      });
-    });
-  },
-
-  addToWhitelist: function() {
-     console.log("Adding to whitelist...");
-
-    web3.eth.getAccounts(function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
-
-      var account = accounts[0];
-
-      App.contracts.Simplify.deployed().then(function(instance) {
-        syTokenInstance = instance;
-        const address = $('#whitelistAddress').val();
-
-        syTokenInstance.addAddressToWhitelist(address, {from: account, gas: 100000}).then(function(result){
-          alert('Endereço autorizado');
-          console.log(result);
+          resolve(balance);
+        }).catch(function(err) {
+          console.log(err.message);
+          reject(err);
         });
       });
     });
+
+    
   },
 
-  createAction: function() {
-    console.log("Creating action...");
-
-    web3.eth.getAccounts(function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
-
-      var account = accounts[0];
-
-      App.contracts.Simplify.deployed().then(function(instance) {
-        syTokenInstance = instance;
-        const people = parseInt($('#actionPeople').val());
-        const url = $('#actionUrl').val();
-
-        console.log(people + " people at " + url);
-
-        syTokenInstance.addAction(people, url).then(function(result){
-          alert("Nova ação cadastrada");
-          console.log(result);
-        });
-      });
+  updateUserData: function() {
+    App.getBalances().then(function(balance) {
+      $('#TTBalance').text(balance);
     });
-  },
-
-  addVolunteer: function() {
-    console.log("Adding volunteer...");
-
-    var r = confirm("Os dados estão corretos? Após a inserção, não será mais possível alterar os dados.");
-    if (r == false) return;
-    web3.eth.getAccounts(function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
-
-      var account = accounts[0];
-
-      App.contracts.Simplify.deployed().then(function(instance) {
-        syTokenInstance = instance;
-        const actionId = parseInt($('#actionId').val());
-        const volunteer = $('#volunteer').val();
-        const contribution = parseInt($('#contribution').val());
-
-        syTokenInstance.addVolunteer(actionId, volunteer, contribution).then(function(result){
-          alert("Novo voluntário adicionado à ação");
-          console.log(result);
-        });
-      });
-    });
-  },
-
-  finishAction: function() {
-    console.log("Finishing action...");
-    var r = confirm("Deseja realmente encerrar a ação? Após o encerramento ele mudará de status e os tokens serão distribuídos.");
-    if (r == false) return;
-
-    web3.eth.getAccounts(function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
-
-      var account = accounts[0];
-
-      App.contracts.Simplify.deployed().then(function(instance) {
-        syTokenInstance = instance;
-        const actionId = $('#actionIdToFinish').val();
-
-        syTokenInstance.finishAction(actionId).then(function(result){
-          syTokenInstance.getActionTokenAmount().then(function(result){
-            alert("Ação encerrada. O total de tokens emitidos foi de " + result.toString());
-            console.log(result);
-          });
-        });
-      });
-    });
+    
+    App.getFlow().then(function(flow) {
+      $('#TTFlow').text(flow);  
+    })
+    
   },
 
   amITheOwner: function() {
@@ -221,45 +143,6 @@ App = {
     });
   },
 
-  populateActions: function() {
-    web3.eth.getAccounts(function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
-
-      var account = accounts[0];
-
-      App.contracts.Simplify.deployed().then(function(instance) {
-        syTokenInstance = instance;
-
-
-        syTokenInstance.getActionCount().then(function(result){
-          const count = result.toString();
-          $("#actions").empty();
-          $("#loading").show();
-          for (var i = 0; i < count; i++) {
-            syTokenInstance.getAction(i).then(function(action) {
-              console.log(action);
-              const creator = action[0].toString();
-              const url = web3.toAscii(action[1]);
-              const active = action[2].toString();
-              const people = action[3].toString();
-              const volunteers = action[4].toString();
-
-              if(active){
-                              // $("#actions").append("<tr><td>"+(i-1)+"</td><td>"+creator+"</td><td>"+url+"</td><td>"+people+"</td><td>"+volunteers+"</td></tr>");
-                $("#actions").append("<p class='action'>A&ccedil;&atilde;o #" + (i-1) + " (" + people + " pessoas impactadas)</p>");
-                $("#actions").append("<p class='address'>Criado por " + creator + "</p>");
-                $("#actions").append("<p><a href='" + url + "' target='_blank'>" + url + "</a> - " + volunteers + " volunt&aacute;rios</p><hr>");
-              }
-            });
-            $("#loading").hide();
-          }
-        });
-      });
-    });
-  },
-
   mint: function() {
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
@@ -271,23 +154,68 @@ App = {
       App.contracts.Simplify.deployed().then(async function(instance) {
         syTokenInstance = instance;
 
-        const decimals = await syTokenInstance.decimals.call();
+        const decimals = await syTokenInstance.decimals.call({from:account});
         const address = $('#address').val();
         const amount  = $('#amount').val() * Math.pow(10, decimals);
 
-        syTokenInstance.mint(address, amount).then(function(result) {
+        syTokenInstance.mint(address, amount, {from:account}).then(function(result) {
           alert('Tokens emitidos!');
-          return App.getBalances();
+          // App.getBalances();
+          // App.getFlow();
+          App.updateUserData();
         });
       });
     });
   },
 
   createAccount: function() {
-    web3.personal.newAccount(function(account) {
-      console.log(account);
-      $('#account').text(account.address);
-      $('#privateKey').text(account.privateKey);
+    let account = web3.eth.account.create();
+    console.log(account);
+    $('#account').text(account.address);
+    $('#privateKey').text(account.privateKey);
+  },
+
+  getFlow: function(account) {
+    return new Promise(function(resolve, reject){
+      App.contracts.Simplify.deployed().then(async function(instance) {
+        console.log('Getting flow...');
+
+        var syTokenInstance;
+
+      
+        web3.eth.getAccounts(function(error, accounts) {
+          if (error) {
+            console.log(error);
+            reject(error);
+          }
+
+          if(!account) account = accounts[0];
+
+          App.contracts.Simplify.deployed().then(function(instance) {
+            syTokenInstance = instance;
+
+            return syTokenInstance.getFlow(account);
+          }).then(async function(result) {
+            const decimals = await syTokenInstance.decimals.call();
+            let flow = result/Math.pow(10, decimals);
+
+            resolve(flow);
+          }).catch(function(err) {
+            console.log(err.message);
+            reject(err);
+          });
+        });
+      });
+    });      
+  },
+
+  checkAccount: function() {
+    App.getBalances($('#checkaccount').val()).then(function(balance) {
+      $('#checkbalance').val('Saldo: ' + balance + ' SY');
+    });
+    
+    App.getFlow($('#checkaccount').val()).then(function(flow) {
+      $('#checkflow').val('Fluxo: ' + flow + ' SY');  
     });
   }
 
