@@ -14,6 +14,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     document.getElementById("signUp").style.visibility="hidden";
     document.getElementById("signIn").style.visibility="hidden";
+    document.getElementById("error-tabs").style.visibility="hidden";
 
     document.getElementById("signOut").style.visibility="visible";
     document.getElementById("tabs").style.visibility="visible";
@@ -32,10 +33,11 @@ firebase.auth().onAuthStateChanged(function(user) {
     // User is signed out.
     document.getElementById("signUp").style.visibility="visible";
     document.getElementById("signIn").style.visibility="visible";
+    document.getElementById("error-tabs").style.visibility="visible";
 
     document.getElementById("signOut").style.visibility="hidden";
     document.getElementById("tabs").style.visibility="hidden";
-    
+
     console.log('signed out');
   }
 });

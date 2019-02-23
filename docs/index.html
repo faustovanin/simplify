@@ -225,11 +225,22 @@
 
   <div class="container" id="system">
 
-    <div class="text-center">
-      <h2>Sistema de Interação Simplify</h2>
+
+
+    <div id="error-tabs" class="text-center" style="visibility: hidden;">
+      <h4>Você precisa estar logado para acessar o sistema de recompensas</h4>
+      <div style="display: inline;">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signUpModal">Criar Conta</button>
+        ou
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#loginModal">Entrar</button>
+      </div>
     </div>
 
-    <div id="tabs">
+    <div id="tabs" style="visibility: hidden;">
+      <div class="text-center">
+        <h2>Sistema de Interação Simplify</h2>
+      </div>
+
       <ul class="nav nav-tabs nav-justified" style="text-align: left;">
         <li class="active"><a href="#first" data-toggle="tab" id="first_tab">Meus SY</a></li>
         <li><a href="#second" data-toggle="tab" id="second_tab">Emitir</a></li>
