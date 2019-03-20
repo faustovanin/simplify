@@ -1,3 +1,6 @@
+
+var db = firebase.firestore();
+
 App = {
   web3Provider: null,
   contracts: {},
@@ -29,10 +32,8 @@ App = {
       // Set the provider for our contract.
       App.contracts.Simplify.setProvider(App.web3Provider);
 
-
       // App.populateActions();
-      // App.getBalances();
-      // App.getFlow();
+
       App.updateUserData();
     });
 
@@ -53,43 +54,91 @@ App = {
   handleTransfer: function(event) {
     event.preventDefault();
 
-    var syTokenInstance;
+    if (document.getElementById("TTTransferAddress").value
+      && document.getElementById("TTTransferAmount").value
+      && document.getElementById("TTTransferComment").value
+    ) {
 
-    web3.eth.getAccounts(function(error, accounts) {
-      if (error) {
-        console.log(error);
-      }
+      var syTokenInstance;
 
-      var account = accounts[0];
+      web3.eth.getAccounts(function(error, accounts) {
+        if (error) {
+          console.log(error);
+        }
 
-      App.contracts.Simplify.deployed().then(async function(instance) {
-        syTokenInstance = instance;
+        var account = accounts[0];
 
-        const decimals = await syTokenInstance.decimals.call();
-        var amount = parseInt($('#TTTransferAmount').val()) * Math.pow(10, decimals);
-        var toAddress = $('#TTTransferAddress').val();
-        console.log('Transfer ' + amount + ' TT to ' + toAddress);
+        App.contracts.Simplify.deployed().then(async function(instance) {
+          syTokenInstance = instance;
 
-        return syTokenInstance.transfer(toAddress, amount, {from: account, gas: 100000});
-      }).then(function(result) {
-        alert('Transfer Successful!');
-        // App.getBalances();
-        // App.getFlow();
-        App.updateUserData();
-      }).catch(function(err) {
-        console.log(err.message);
+          const decimals = await syTokenInstance.decimals.call();
+          var amount = parseInt($('#TTTransferAmount').val()) * Math.pow(10, decimals);
+          var toAddress = $('#TTTransferAddress').val();
+          // console.log('Transfer ' + amount + ' TT to ' + toAddress);
+          return syTokenInstance.transfer(toAddress, amount, {from: account, gas: 100000});
+        })
+        .then(function() {
+          /**
+           * Save transaction data on our backend
+           */
+          firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              db.collection("users").doc(user.uid).get().then(function(doc) {
+                if (doc.exists) {
+                  // console.log("loggedUser data:", doc.data());
+                  loggedUser = doc.data();
+                  db.collection("transactions").add({
+                    senderUid: loggedUser.uid,
+                    senderWallet: loggedUser.wallet,
+                    receiverWallet: document.getElementById("TTTransferAddress").value,
+                    amountSent: document.getElementById("TTTransferAmount").value,
+                    recognition: document.getElementById("TTTransferComment").value,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                  })
+                  .then(function(result) {
+                    // console.log('transaction saved: ', result);
+                  })
+                  .catch(function(error) {
+                    console.error("Error adding transaction: ", error);
+                  });
+                } else {
+                    // user will be undefined
+                    throw new Error("No such user or not enough transaction data!");
+                }
+              }).catch(function(error) {
+                console.error("Error getting Logged User data:", error);
+              });
+            }
+          });
+        })
+        .then(function(result) {
+          alert('Transfer Successful!');
+
+          document.getElementById("TTTransferAddress").value = "";
+          document.getElementById("TTTransferAmount").value = "";
+          document.getElementById("TTTransferComment").value = "";
+
+          App.updateUserData();
+        }).catch(function(err) {
+          console.error(err.message);
+        });
       });
-    });
+    }
+
   },
 
   getBalances: function(account) {
-    console.log('Getting balances...');
+    if (!account) {
+      throw new Error("Call without account");
+    }
+
+    // console.log('Getting balances...');
 
     var syTokenInstance;
     return new Promise(function(resolve, reject) {
       web3.eth.getAccounts(function(error, accounts) {
         if (error) {
-          console.log(error);
+          console.error(error);
           reject(error);
         }
 
@@ -105,30 +154,29 @@ App = {
 
           resolve(balance);
         }).catch(function(err) {
-          console.log(err.message);
+          console.error(err.message);
           reject(err);
         });
       });
     });
 
-    
+
   },
 
   updateUserData: function() {
     App.getBalances().then(function(balance) {
       $('#TTBalance').text(balance);
     });
-    
+
     App.getFlow().then(function(flow) {
-      $('#TTFlow').text(flow);  
-    })
-    
+      $('#TTFlow').text(flow);
+    });
   },
 
   amITheOwner: function() {
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
-        console.log(error);
+        console.error(error);
       }
 
       var account = accounts[0];
@@ -146,7 +194,7 @@ App = {
   mint: function() {
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
-        console.log(error);
+        console.error(error);
       }
 
       var account = accounts[0];
@@ -160,8 +208,6 @@ App = {
 
         syTokenInstance.mint(address, amount, {from:account}).then(function(result) {
           alert('Tokens emitidos!');
-          // App.getBalances();
-          // App.getFlow();
           App.updateUserData();
         });
       });
@@ -170,22 +216,25 @@ App = {
 
   createAccount: function() {
     let account = web3.eth.account.create();
-    console.log(account);
+    // console.log(account);
     $('#account').text(account.address);
     $('#privateKey').text(account.privateKey);
   },
 
   getFlow: function(account) {
+    if (!account) {
+      throw new Error("Call without account");
+    }
+
     return new Promise(function(resolve, reject){
       App.contracts.Simplify.deployed().then(async function(instance) {
-        console.log('Getting flow...');
+        // console.log('Getting flow...');
 
         var syTokenInstance;
 
-      
         web3.eth.getAccounts(function(error, accounts) {
           if (error) {
-            console.log(error);
+            console.error(error);
             reject(error);
           }
 
@@ -201,36 +250,38 @@ App = {
 
             resolve(flow);
           }).catch(function(err) {
-            console.log(err.message);
+            console.error(err.message);
             reject(err);
           });
         });
       });
-    });      
+    });
   },
 
   checkAccount: function() {
     App.getBalances($('#checkaccount').val()).then(function(balance) {
       $('#checkbalance').val('Saldo: ' + balance + ' SY');
     });
-    
+
     App.getFlow($('#checkaccount').val()).then(function(flow) {
-      $('#checkflow').val('Fluxo: ' + flow + ' SY');  
+      $('#checkflow').val('Fluxo: ' + flow + ' SY');
     });
   }
-
 };
 
-$('#loginModal').on('shown.bs.modal', function () {
-  $('#myInput').focus()
-});
 
-$('#signUpModal').on('shown.bs.modal', function () {
-  $('#myInput').focus()
-});
+$(document).ready(function() {
+  $('#loginModal').on('shown.bs.modal', function () {
+    $('#myInput').focus()
+  });
 
-$(function() {
-  $(window).load(function() {
-    App.init();
+  $('#signUpModal').on('shown.bs.modal', function () {
+    $('#myInput').focus()
+  });
+
+  $(function() {
+    $(window).load(function() {
+      App.init();
+    });
   });
 });
