@@ -128,11 +128,8 @@ App = {
   },
 
   getBalances: function(account) {
-    if (!account) {
-      throw new Error("Call without account");
-    }
 
-    // console.log('Getting balances...');
+    console.log('Getting balances...');
 
     var syTokenInstance;
     return new Promise(function(resolve, reject) {
@@ -222,13 +219,10 @@ App = {
   },
 
   getFlow: function(account) {
-    if (!account) {
-      throw new Error("Call without account");
-    }
-
     return new Promise(function(resolve, reject){
       App.contracts.Simplify.deployed().then(async function(instance) {
-        // console.log('Getting flow...');
+
+        console.log('Getting flow...');
 
         var syTokenInstance;
 
