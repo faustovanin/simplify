@@ -43,11 +43,14 @@
           <li><a href="#">Home</a></li>
           <li><a href="#about">Sobre</a></li>
           <li><a href="#system">Interagir</a></li>
+          <li><a href="./interactions.html">Histórico</a></li>
           <!-- <li><a href="#about">Sobre2</a></li> -->
         </ul>
-        <!-- <ul class="nav navbar-nav navbar-right">
-          <li><a href="#">Link</a></li>
-          <li class="dropdown">
+        <ul class="nav navbar-nav navbar-right">
+          <li id="signUp" data-toggle="modal" data-target="#signUpModal" style="visibility: hidden;"><a style="cursor: pointer;">Cadastro</a></li>
+          <li id="signIn" data-toggle="modal" data-target="#loginModal" style="visibility: hidden;"><a style="cursor: pointer;">Entrar</a></li>
+          <li id="signOut" onclick="logout()" style="visibility: hidden;"><a style="cursor: pointer;">Sair</a></li>
+          <!-- <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="#">Action</a></li>
@@ -56,11 +59,88 @@
               <li role="separator" class="divider"></li>
               <li><a href="#">Separated link</a></li>
             </ul>
-          </li>
-        </ul> -->
+          </li> -->
+        </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+
+  <!-- Auth Modal -->
+  <div class="auth-modal">
+
+    <!-- Modal Cadastro -->
+    <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- onclick="createUser()" -->
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="signUpModalLabel">Cadastro</h4>
+          </div>
+          <form action="javascript:createUser()">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="name">Nome:</label>
+                <input required type="name" class="form-control" id="name">
+              </div>
+              <div class="form-group">
+                <label for="wallet">Carteira:</label>
+                <input required type="wallet" class="form-control" id="wallet">
+              </div>
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input required type="email" class="form-control" id="email">
+              </div>
+              <div class="form-group">
+                <label for="password">Senha:</label>
+                <input required type="password" class="form-control" id="password">
+              </div>
+              <!-- <div class="checkbox">
+                <label><input type="checkbox"> Remember me</label>
+              </div> -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <!-- onclick="login()" -->
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="loginModalLabel">Entrar</h4>
+          </div>
+          <form action="javascript:login()">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input required type="email" class="form-control" id="emailLogin">
+              </div>
+              <div class="form-group">
+                <label for="password">Senha:</label>
+                <input required type="password" class="form-control" id="passwordLogin">
+              </div>
+              <!-- <div class="checkbox">
+                <label><input type="checkbox"> Remember me</label>
+              </div> -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
   <div class="banner">
     <div class="row">
@@ -146,67 +226,103 @@
 
   <div class="container" id="system">
 
-    <div class="text-center">
-      <h2>Sistema de Interação Simplify</h2>
-    </div>
 
-    <ul class="nav nav-tabs nav-justified" style="text-align: left;">
-      <li class="active"><a href="#first" data-toggle="tab" id="first_tab">Meus SY</a></li>
-      <li><a href="#second" data-toggle="tab" id="second_tab">Emitir</a></li>
-      <li><a href="#third" data-toggle="tab" id="third_tab">Verificar</a></li>
-    </ul>
 
-    <div class="tab-content">
-
-      <div id="first" class="tab-pane fade in active">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Wallet</h3>
-          </div>
-          <div class="panel-body">
-            <h4>Saldo</h4>
-            <strong>Saldo</strong>: <span id="TTBalance"></span> SY<br /><br />
-            <strong>Fluxo</strong>: <span id="TTFlow"></span> SY<br /><br />
-            <h4>Transferir</h4>
-            <input type="text" class="form-control" id="TTTransferAddress" placeholder="Conta de Destino" />
-            <input type="text" class="form-control" id="TTTransferAmount" placeholder="Quantidade" />
-            <!-- <input type="text" class="form-control" id="TTTransferComment" placeholder="Comentário" /> -->
-            <button class="btn btn-primary" id="transferButton" type="button">Reconhecer SY</button>
-          </div>
-        </div>
-        <!-- <a class="btn btn-primary btn-lg" onclick="$('#second_tab').trigger('click')">Second</a>
-            <a class="btn btn-primary btn-lg" onclick="$('#third_tab').trigger('click')">Third</a> -->
-      </div>
-
-      <div id="second" class="tab-pane fade in">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Emitir</h3>
-          </div>
-          <div class="whitelist panel-body">
-            <h4>Tokens a emitir</h4>
-            <input type="text" class="form-control" id="address" placeholder="Conta de Destino" />
-            <input type="text" class="form-control" id="amount" placeholder="Quantidade" />
-            <input class="btn btn-primary" type="button" id="mint" value="Emitir SY" />
-          </div>
-        </div>
-      </div>
-
-      <div id="third" class="tab-pane fade in">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">A&ccedil;&otilde;es</h3>
-          </div>
-          <div class="actions panel-body">
-            <h4>Consultar Conta</h4>
-            <input type="text" class="form-control" id="checkaccount" placeholder="Conta"/>
-            <input type="button" class="btn btn-primary" id="checkAccount" value="Verificar SY" />        
-            <input type="text" class="form-control" id="checkbalance" placeholder="Saldo" readonly/>
-            <input type="text" class="form-control" id="checkflow" placeholder="Fluxo" readonly/>
-          </div>
-        </div>
+    <div id="error-tabs" class="text-center" style="visibility: hidden;">
+      <h4>Você precisa estar logado para acessar o sistema de recompensas</h4>
+      <div style="display: inline;">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signUpModal">Criar Conta</button>
+        ou
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#loginModal">Entrar</button>
       </div>
     </div>
+
+    <div id="tabs" style="visibility: hidden;">
+      <div class="text-center" style="margin-bottom: 30px;">
+        <h2>Sistema de Interação Simplify</h2>
+        <p>1 - Use uma carteira com Ether (aconselhamos a <a href="https://metamask.io/">MetaMask</a>)</p>
+        <p>2 - Emita tokens para essa carteira</p>
+        <p>3 - Transfira tokens como reconhecimento</p>
+      </div>
+
+      <ul class="nav nav-tabs nav-justified" style="text-align: left;">
+        <li><a href="#second" data-toggle="tab" id="second_tab">Emitir</a></li>
+        <li class="active"><a href="#first" data-toggle="tab" id="first_tab">Reconhecer</a></li>
+        <li><a href="#third" data-toggle="tab" id="third_tab">Verificar</a></li>
+      </ul>
+
+      <div class="tab-content">
+
+        <div id="first" class="tab-pane fade in active">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Sistema de Reconhecimento</h3>
+            </div>
+            <div class="panel-body">
+              <h4>Saldo (Sua Wallet)</h4>
+              <strong>Saldo</strong>: <span id="TTBalance"></span> SY<br /><br />
+              <strong>Fluxo</strong>: <span id="TTFlow"></span> SY<br /><br />
+              <h4>Gerar um Reconhecimento (Transferir)</h4>
+              <label style="margin-top: 2%;">Endereço da Carteira de Destino</label>
+              <input type="text" class="form-control" id="TTTransferAddress" />
+              <label style="margin-top: 2%;">Quantidade de SYs de SYs (apenas números)</label>
+              <input type="text" class="form-control" id="TTTransferAmount" />
+              <label style="margin-top: 2%;">Reconhecimento</label>
+              <textarea style="resize: vertical;" class="form-control" id="TTTransferComment" rows="3" ></textarea>
+              <div style="display: grid; margin-top: 4%;" >
+                <button class="btn btn-primary" id="transferButton" type="button">Reconhecer com <i style="color: red;" class="fas fa-heart"></i> (em SY)</button>
+              </div>
+            </div>
+          </div>
+          <!-- <a class="btn btn-primary btn-lg" onclick="$('#second_tab').trigger('click')">Second</a>
+              <a class="btn btn-primary btn-lg" onclick="$('#third_tab').trigger('click')">Third</a> -->
+        </div>
+
+        <div id="second" class="tab-pane fade in">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Emita Tokens para Reconhecer</h3>
+            </div>
+            <div class="whitelist panel-body">
+              <h4>Emitir Tokens</h4>
+              <div>
+                <p>Para emitir tokens você precisa de uma carteira da rede Ethereum.</p>
+                <p>Aconselhamos a utilização da <a href="https://metamask.io/">MetaMask</a> você pode <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn">instalar a extensão</a> em seu Chrome.</p>
+                <p>Você precisará de uma quantidade pequena de Ether em sua carteira para pagar os custos das transações</p>
+              </div>
+              <label>Endereço da sua Carteira</label>
+              <input type="text" class="form-control" id="address" />
+              <label style="margin-top: 2%;">Quantidade de SYs (apenas números)</label>
+              <input type="text" class="form-control" id="amount" />
+              <div style="display: grid; margin-top: 4%;" >
+                <input class="btn btn-primary" type="button" id="mint" value="Emitir SY" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="third" class="tab-pane fade in">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Consultas</h3>
+            </div>
+            <div class="actions panel-body">
+              <h4>Consultar Conta</h4>
+              <label style="margin-top: 2%;">Endereço da Carteira</label>
+              <div style="display: flex;">
+                <input type="text" style="margin-right: 5%;" class="form-control" id="checkaccount" placeholder="Conta"/>
+                <input type="button" class="btn btn-primary" id="checkAccount" value="Verificar SY" />
+              </div>
+              <label style="margin-top: 2%;">Saldo</label>
+              <input type="text" class="form-control" id="checkbalance" placeholder="Saldo" readonly/>
+              <label style="margin-top: 2%;">Fluxo</label>
+              <input type="text" class="form-control" id="checkflow" placeholder="Fluxo" readonly/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- <div class="container" id="about2">
@@ -234,17 +350,21 @@
     </div>
   </footer>
 
-
-
-
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="js/bootstrap.min.js"></script>
   <script src="js/web3.min.js"></script>
   <script src="js/truffle-contract.js"></script>
-  <script src="js/app.js"></script>
   <!-- <script src="js/tab.js"></script> -->
+
+  <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.7.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.1/firebase-firestore.js"></script> -->
+  <script src="js/firebase.js"></script>
+
+  <script src="js/app.js"></script>
 </body>
 
 </html>

@@ -71,6 +71,15 @@
 	margin: 3%;
 }
 
+#error-tabs h4 {
+	margin: 10% auto 5%;
+	padding: 0 10%;
+}
+
+#system #tabs {
+	margin-top: -20%;
+}
+
 .tab-content {
 	padding: 3% 0;
 }

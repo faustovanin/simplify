@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Interações Simplify</title>
+
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+  <link rel="stylesheet" type="text/css" href="css/table.css">
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+          aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="./index.html">Simplify</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="./index.html">Home</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+    <!-- TODO: adicionar 2 abas de "Meus Reconhecimentos": 'Enviados' e 'Recebidos' -->
+
+  <div class="limiter">
+    <div class="container-table100">
+      <div class="text-center">
+        <h2 style="margin: 30px; color: #36304a;">Histórico de Reconhecimentos Simplify</h2>
+        <!-- <br><br> -->
+      </div>
+      <div class="wrap-table100">
+        <div class="table100">
+          <table>
+            <thead>
+              <tr class="table100-head">
+                <th class="column1">Data</th>
+                <th class="column2">De</th>
+                <th class="column3">Reconhecimento</th>
+                <th class="column4">Simplifys</th>
+                <th class="column5">Para</th>
+              </tr>
+            </thead>
+            <tbody id="table-box"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <footer>
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-6"></div>
+        <div class="col-md-6">
+          <h2>Somos Simplify</h2>
+          <h3>Nos siga nas redes sociais:</h3>
+          <a href="https://www.facebook.com/simplify.poa" target="_blank">
+            <i style="color: #fff; font-size: 35px; margin-bottom: 5%;" class="fab fa-facebook-square"></i>
+          </a>
+          <h4>Feito com <i style="color: red;" class="fas fa-heart"></i> pela equipe Simplify!</h4>
+          <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
+  <script src="js/firebase.js"></script>
+  <script>
+    window.onload = function() {
+      getTransactions();
+    };
+  </script>
+</body>
+
+
+</html>
