@@ -36,13 +36,17 @@ truffle test
 ```
 # Front-End
 
-Para utilizar o front web, execute o arquivo ```index.html``` contido no diretório ```docs```.
+Para utilizar o front web, execute o arquivo ```index.html``` contido no diretório ```docs```, rodando:
+
+```bash
+npm run dev
+```
 
 # Contrato
 
-```
-https://ropsten.etherscan.io/token/0xa862b25d93b7b73e74d26a7412206ecfc017ada5
-```
+
+> https://ropsten.etherscan.io/token/0xa862b25d93b7b73e74d26a7412206ecfc017ada5
+
 
 ### Para adicionar SY a sua MetaMask:
 
