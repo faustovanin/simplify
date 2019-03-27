@@ -156,7 +156,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-5">
-          <img class="interaction" src="./images/activists.jpg" alt="">
+          <img class="interaction" src="./images/activists.jpeg" alt="">
         </div>
         <div class="col-md-7">
           <h2>Vamos Interagir!</h2>
@@ -224,9 +224,12 @@
     </div>
   </div>
 
+  <div id="loading" class="text-center" style="margin: 200px auto 300px;">
+    <h4>Carregando...</h4>
+    <p>Pode levar alguns segundos devido ao tempo de processamento da rede Blockchain</p>
+  </div>
+
   <div class="container" id="system">
-
-
 
     <div id="error-tabs" class="text-center" style="visibility: hidden;">
       <h4>Você precisa estar logado para acessar o sistema de recompensas</h4>
@@ -246,8 +249,8 @@
       </div>
 
       <ul class="nav nav-tabs nav-justified" style="text-align: left;">
-        <li><a href="#second" data-toggle="tab" id="second_tab">Emitir</a></li>
-        <li class="active"><a href="#first" data-toggle="tab" id="first_tab">Reconhecer</a></li>
+        <li><a href="#second" data-toggle="tab" id="second_tab">Auto Reconhecer</a></li>
+        <li class="active"><a href="#first" data-toggle="tab" id="first_tab">Reconhecer o Outro</a></li>
         <li><a href="#third" data-toggle="tab" id="third_tab">Verificar</a></li>
       </ul>
 
@@ -281,7 +284,7 @@
         <div id="second" class="tab-pane fade in">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">Emita Tokens para Reconhecer</h3>
+              <h3 class="panel-title">Emita tokens SY "Reconhecendo" você, para "Reconhecer" o outro</h3>
             </div>
             <div class="whitelist panel-body">
               <h4>Emitir Tokens</h4>
@@ -294,6 +297,8 @@
               <input type="text" class="form-control" id="address" />
               <label style="margin-top: 2%;">Quantidade de SYs (apenas números)</label>
               <input type="text" class="form-control" id="amount" />
+              <label style="margin-top: 2%;">Auto Reconhecimento</label>
+              <textarea style="resize: vertical;" class="form-control" id="self-recognition" rows="3" ></textarea>
               <div style="display: grid; margin-top: 4%;" >
                 <input class="btn btn-primary" type="button" id="mint" value="Emitir SY" />
               </div>
