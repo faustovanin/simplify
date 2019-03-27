@@ -59,6 +59,9 @@ App = {
       && document.getElementById("TTTransferComment").value
     ) {
 
+      $("#loading").show();
+      $("#system").hide();
+
       var syTokenInstance;
 
       web3.eth.getAccounts(function(error, accounts) {
@@ -83,31 +86,33 @@ App = {
            */
           firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
-              db.collection("users").doc(user.uid).get().then(function(doc) {
-                if (doc.exists) {
-                  // console.log("loggedUser data:", doc.data());
-                  loggedUser = doc.data();
-                  db.collection("transactions").add({
-                    senderUid: loggedUser.uid,
-                    senderWallet: loggedUser.wallet,
-                    receiverWallet: document.getElementById("TTTransferAddress").value,
-                    amountSent: document.getElementById("TTTransferAmount").value,
-                    recognition: document.getElementById("TTTransferComment").value,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                  })
-                  .then(function(result) {
-                    // console.log('transaction saved: ', result);
-                  })
-                  .catch(function(error) {
-                    console.error("Error adding transaction: ", error);
-                  });
-                } else {
-                    // user will be undefined
-                    throw new Error("No such user or not enough transaction data!");
-                }
-              }).catch(function(error) {
-                console.error("Error getting Logged User data:", error);
-              });
+              const amount = parseInt($('#TTTransferAmount').val());
+              const toAddress = $('#TTTransferAddress').val();
+              const recognitionText = $('#TTTransferComment').val();
+
+              db.collection("users").doc(user.uid).get()
+                .then(function(doc) {
+                  if (doc.exists) {
+                    // console.log("loggedUser data:", doc.data());
+                    loggedUser = doc.data();
+                    db.collection("transactions").add({
+                      senderUid: loggedUser.uid,
+                      senderWallet: loggedUser.wallet,
+                      receiverWallet: toAddress,
+                      amountSent: amount,
+                      recognition: recognitionText,
+                      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+                    .catch(function(error) {
+                      console.error("Error adding transaction: ", error);
+                    });
+                  } else {
+                      // user will be undefined
+                      throw new Error("No such user or not enough transaction data!");
+                  }
+                }).catch(function(error) {
+                  console.error("Error getting Logged User data:", error);
+                });
             }
           });
         })
@@ -118,8 +123,14 @@ App = {
           document.getElementById("TTTransferAmount").value = "";
           document.getElementById("TTTransferComment").value = "";
 
+          $("#loading").hide();
+          $("#system").show();
+
           App.updateUserData();
         }).catch(function(err) {
+          $("#loading").hide();
+          $("#system").show();
+          alert(err.message);
           console.error(err.message);
         });
       });
@@ -194,6 +205,9 @@ App = {
         console.error(error);
       }
 
+      $("#loading").show();
+      $("#system").hide();
+
       var account = accounts[0];
 
       App.contracts.Simplify.deployed().then(async function(instance) {
@@ -201,12 +215,56 @@ App = {
 
         const decimals = await syTokenInstance.decimals.call({from:account});
         const address = $('#address').val();
-        const amount  = $('#amount').val() * Math.pow(10, decimals);
+        const selfRecognition = $('#self-recognition').val();
+        const amount = parseInt($('#amount').val()) * Math.pow(10, decimals);
+        const amountSY = $('#amount').val();
 
-        syTokenInstance.mint(address, amount, {from:account}).then(function(result) {
-          alert('Tokens emitidos!');
-          App.updateUserData();
-        });
+        syTokenInstance.mint(address, amount, {from:account})
+          .then(function() {
+            firebase.auth().onAuthStateChanged(function(user) {
+              if (user) {
+                db.collection("users").doc(user.uid).get()
+                  .then(function(doc) {
+                    if (doc.exists) {
+                      loggedUser = doc.data();
+                      db.collection("transactions").add({
+                        senderUid: loggedUser.uid,
+                        senderWallet: "Auto Reconhecimento",
+                        receiverWallet: loggedUser.wallet,
+                        amountSent: amountSY,
+                        recognition: selfRecognition,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                      })
+                      .catch(function(error) {
+                        console.error("Error adding transaction: ", error);
+                      });
+                    } else {
+                        // user will be undefined
+                        throw new Error("No such user or not enough transaction data!");
+                    }
+                  }).catch(function(error) {
+                    console.error("Error getting Logged User data:", error);
+                  });
+              }
+            });
+          })
+          .then(function(result) {
+            alert('Tokens emitidos!');
+
+            $("#loading").hide();
+            $("#system").show();
+            document.getElementById("address").value = "";
+            document.getElementById("self-recognition").value = "";
+            document.getElementById("amount").value = "";
+
+            App.updateUserData();
+          })
+          .catch(function(err) {
+            $("#loading").hide();
+            $("#system").show();
+            alert(err.message);
+            console.error(err);
+          });
       });
     });
   },
@@ -275,6 +333,7 @@ $(document).ready(function() {
 
   $(function() {
     $(window).load(function() {
+      $("#loading").hide();
       App.init();
     });
   });
