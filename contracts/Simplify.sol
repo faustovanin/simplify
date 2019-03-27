@@ -12,6 +12,8 @@ contract Simplify is ERC20Detailed, ERC20Mintable {
     }
 
     mapping (address => uint256) private _flow;
+    mapping (address => uint256) private recognitionFlow;
+    mapping (address => uint256) private selfFlow;
 
 	constructor (string memory _name, string memory _symbol, uint8 _decimals) public
         ERC20Detailed(_name, _symbol, _decimals)
@@ -25,7 +27,10 @@ contract Simplify is ERC20Detailed, ERC20Mintable {
         returns (bool)
     {
         bool result = super.mint(_to, _amount);
-        if(result) addFlow(_to, _amount);
+        if(result) {
+            recognitionFlow[to] += value;
+            // addFlow(_to, _amount);
+        }
     }
 
     function transfer(address to, uint256 value) 
@@ -34,8 +39,9 @@ contract Simplify is ERC20Detailed, ERC20Mintable {
     {
         bool result = super.transfer(to, value);
         if(result) {
-            addFlow(to, value);
-            addFlow(msg.sender, value);
+            recognitionFlow[to] += value;
+            // addFlow(to, value);
+            // addFlow(msg.sender, value);
         }
     }
 
