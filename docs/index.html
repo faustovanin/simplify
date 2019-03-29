@@ -262,18 +262,20 @@
               <h3 class="panel-title">Sistema de Reconhecimento</h3>
             </div>
             <div class="panel-body">
-              <h4>Saldo (Sua Wallet)</h4>
-              <strong>Saldo</strong>: <span id="TTBalance"></span> SY<br /><br />
-              <strong>Fluxo</strong>: <span id="TTFlow"></span> SY<br /><br />
+              <h4>Saldo (Sua Wallet)</h4><br />
+              <strong>Saldo Atual</strong>: <span id="TTBalance"></span> S!<br /><br />
+              <strong>Total de entradas como Auto Reconhecimento</strong>: <span id="selfFlow"></span> S!<br /><br />
+              <strong>Total de entradas como Reconhecimento</strong>: <span id="recognitionFlow"></span> S!<br /><br />
+
               <h4>Gerar um Reconhecimento (Transferir)</h4>
               <label style="margin-top: 2%;">Endereço da Carteira de Destino</label>
               <input type="text" class="form-control" id="TTTransferAddress" />
-              <label style="margin-top: 2%;">Quantidade de SYs de SYs (apenas números)</label>
+              <label style="margin-top: 2%;">Quantidade de S!s de S!s (apenas números)</label>
               <input type="text" class="form-control" id="TTTransferAmount" />
               <label style="margin-top: 2%;">Reconhecimento</label>
               <textarea style="resize: vertical;" class="form-control" id="TTTransferComment" rows="3" ></textarea>
               <div style="display: grid; margin-top: 4%;" >
-                <button class="btn btn-primary" id="transferButton" type="button">Reconhecer com <i style="color: red;" class="fas fa-heart"></i> (em SY)</button>
+                <button class="btn btn-primary" id="transferButton" type="button">Reconhecer com <i style="color: red;" class="fas fa-heart"></i> (em S!)</button>
               </div>
             </div>
           </div>
@@ -284,7 +286,7 @@
         <div id="second" class="tab-pane fade in">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">Emita tokens SY "Reconhecendo" você, para "Reconhecer" o outro</h3>
+              <h3 class="panel-title">Emita tokens S! "Reconhecendo" você, para "Reconhecer" o outro</h3>
             </div>
             <div class="whitelist panel-body">
               <h4>Emitir Tokens</h4>
@@ -295,12 +297,12 @@
               </div>
               <label>Endereço da sua Carteira</label>
               <input type="text" class="form-control" id="address" />
-              <label style="margin-top: 2%;">Quantidade de SYs (apenas números)</label>
+              <label style="margin-top: 2%;">Quantidade de S!s (apenas números)</label>
               <input type="text" class="form-control" id="amount" />
               <label style="margin-top: 2%;">Auto Reconhecimento</label>
               <textarea style="resize: vertical;" class="form-control" id="self-recognition" rows="3" ></textarea>
               <div style="display: grid; margin-top: 4%;" >
-                <input class="btn btn-primary" type="button" id="mint" value="Emitir SY" />
+                <input class="btn btn-primary" type="button" id="mint" value="Emitir S!" />
               </div>
             </div>
           </div>
@@ -316,12 +318,14 @@
               <label style="margin-top: 2%;">Endereço da Carteira</label>
               <div style="display: flex;">
                 <input type="text" style="margin-right: 5%;" class="form-control" id="checkaccount" placeholder="Conta"/>
-                <input type="button" class="btn btn-primary" id="checkAccount" value="Verificar SY" />
+                <input type="button" class="btn btn-primary" id="checkAccount" value="Verificar S!" />
               </div>
               <label style="margin-top: 2%;">Saldo</label>
               <input type="text" class="form-control" id="checkbalance" placeholder="Saldo" readonly/>
-              <label style="margin-top: 2%;">Fluxo</label>
-              <input type="text" class="form-control" id="checkflow" placeholder="Fluxo" readonly/>
+              <label style="margin-top: 2%;">Entradas de Auto Reconhecimento</label>
+              <input type="text" class="form-control" id="checkSelfFlow" placeholder="Fluxo" readonly/>
+              <label style="margin-top: 2%;">Entradas de Reconhecimento</label>
+              <input type="text" class="form-control" id="checkRecognitionFlow" placeholder="Fluxo" readonly/>
             </div>
           </div>
         </div>
