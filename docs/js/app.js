@@ -176,8 +176,11 @@ App = {
       $('#TTBalance').text(balance);
     });
 
-    App.getFlow().then(function(flow) {
-      $('#TTFlow').text(flow);
+    App.getSelfFlow().then(function(flow) {
+      $('#selfFlow').text(flow);
+    });
+    App.getRecognitionFlow().then(function(flow) {
+      $('#recognitionFlow').text(flow);
     });
   },
 
@@ -276,7 +279,7 @@ App = {
     $('#privateKey').text(account.privateKey);
   },
 
-  getFlow: function(account) {
+  getSelfFlow: function(account) {
     return new Promise(function(resolve, reject){
       App.contracts.Simplify.deployed().then(async function(instance) {
 
@@ -295,7 +298,41 @@ App = {
           App.contracts.Simplify.deployed().then(function(instance) {
             syTokenInstance = instance;
 
-            return syTokenInstance.getFlow(account);
+            return syTokenInstance.getSelfFlow(account);
+          }).then(async function(result) {
+            const decimals = await syTokenInstance.decimals.call();
+            let flow = result/Math.pow(10, decimals);
+
+            resolve(flow);
+          }).catch(function(err) {
+            console.error(err.message);
+            reject(err);
+          });
+        });
+      });
+    });
+  },
+
+  getRecognitionFlow: function(account) {
+    return new Promise(function(resolve, reject){
+      App.contracts.Simplify.deployed().then(async function(instance) {
+
+        console.log('Getting flow...');
+
+        var syTokenInstance;
+
+        web3.eth.getAccounts(function(error, accounts) {
+          if (error) {
+            console.error(error);
+            reject(error);
+          }
+
+          if(!account) account = accounts[0];
+
+          App.contracts.Simplify.deployed().then(function(instance) {
+            syTokenInstance = instance;
+
+            return syTokenInstance.getRecognitionFlow(account);
           }).then(async function(result) {
             const decimals = await syTokenInstance.decimals.call();
             let flow = result/Math.pow(10, decimals);
@@ -315,8 +352,11 @@ App = {
       $('#checkbalance').val('Saldo: ' + balance + ' SY');
     });
 
-    App.getFlow($('#checkaccount').val()).then(function(flow) {
-      $('#checkflow').val('Fluxo: ' + flow + ' SY');
+    App.getSelfFlow($('#checkaccount').val()).then(function(flow) {
+      $('#checkSelfFlow').val('Fluxo: ' + flow + ' SY');
+    });
+    App.getRecognitionFlow($('#checkaccount').val()).then(function(flow) {
+      $('#checkRecognitionFlow').val('Fluxo: ' + flow + ' SY');
     });
   }
 };

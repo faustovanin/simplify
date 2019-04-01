@@ -1,4 +1,4 @@
-pragma solidity ^0.5.4;
+pragma solidity >= 0.4.22 < 0.6.0;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Mintable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
@@ -11,12 +11,14 @@ contract Simplify is ERC20Detailed, ERC20Mintable {
         _;
     }
 
-    mapping (address => uint256) private _flow;
+    mapping (address => uint256) private flow;
+    mapping (address => uint256) private recognitionFlow;
+    mapping (address => uint256) private selfFlow;
 
 	constructor (string memory _name, string memory _symbol, uint8 _decimals) public
         ERC20Detailed(_name, _symbol, _decimals)
     {
-        
+
     }
 
     function mint(address _to, uint256 _amount)
@@ -25,37 +27,41 @@ contract Simplify is ERC20Detailed, ERC20Mintable {
         returns (bool)
     {
         bool result = super.mint(_to, _amount);
-        if(result) addFlow(_to, _amount);
-    }
-
-    function transfer(address to, uint256 value) 
-        public
-        returns (bool) 
-    {
-        bool result = super.transfer(to, value);
         if(result) {
-            addFlow(to, value);
-            addFlow(msg.sender, value);
+            selfFlow[_to] += _amount;
         }
     }
 
-    function transferFrom(address from, address to, uint256 value) 
+    function transfer(address _to, uint256 _amount)
         public
-        returns (bool) 
+        returns (bool)
     {
-        bool result = super.transferFrom(from, to, value);
+        bool result = super.transfer(_to, _amount);
         if(result) {
-            addFlow(to, value);
-            addFlow(from, value);
+            recognitionFlow[_to] += _amount;
         }
     }
 
-    function addFlow(address _to, uint256 _amount) internal {
-        _flow[_to] += _amount;
+    function transferFrom(address _from, address _to, uint256 _amount)
+        public
+        returns (bool)
+    {
+        bool result = super.transferFrom(_from, _to, _amount);
+        if(result) {
+            flow[_to] += _amount;
+        }
     }
 
     function getFlow(address who) public view returns (uint256) {
-        return _flow[who];
+        return flow[who];
+    }
+
+    function getSelfFlow(address who) public view returns (uint256) {
+        return selfFlow[who];
+    }
+
+    function getRecognitionFlow(address who) public view returns (uint256) {
+        return recognitionFlow[who];
     }
 
 }
